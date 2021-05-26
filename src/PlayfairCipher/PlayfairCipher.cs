@@ -7,8 +7,8 @@ namespace PlayfairCipher
     interface IPlayfairCipher
     {
         void SetKeyTable(KeyTable keyTable);
-        string Encrypt(string message);
-        string Decrypt(string message);
+        string Encrypt(PlayfairMessage message);
+        string Decrypt(PlayfairMessage message);
 
     }
     public class PlayfairCipher: IPlayfairCipher
@@ -20,28 +20,15 @@ namespace PlayfairCipher
             Table = keyTable;
         }
 
-        public string Encrypt(string message)
+        public string Encrypt(PlayfairMessage message)
         {
-            var normalizedMessage = NormalizeMessage(message);
-            var digraphs = BreakMessageIntoDigraphs(normalizedMessage);
+            var digraphs = BreakMessageIntoDigraphs(message);
             return CipherDigraphsOnKeyTable(digraphs);
         }
         
-        private static string NormalizeMessage(string message)
+        private static IEnumerable<string> BreakMessageIntoDigraphs(PlayfairMessage message)
         {
-            var normalized = string.Concat(message.ToUpper().Where(char.IsLetter)).Replace('J', 'I');
-            var result = normalized;
-            for (int i = 0; i < normalized.Length - 2; i += 2)
-            {
-                if (normalized[i] == normalized[i + 1])
-                    result = normalized.Insert(i + 1, "X");
-            }
-            return result;
-        }
-        
-        private static IEnumerable<string> BreakMessageIntoDigraphs(string message)
-        {
-            var digraphs = SplitList.Split(message.ToList(), 2);
+            var digraphs = SplitList.Split(message.Value.ToList(), 2);
             return digraphs.Select(digraph =>
             {
                 if (digraph.Count == 1)
@@ -67,21 +54,18 @@ namespace PlayfairCipher
                     return $"{Table.LetterBelow(position1)}{Table.LetterBelow(position2)}";
 
                 if (IsSameRow(position1, position2))
-                    return
-                        $"{Table.LetterAtRightNeighbor(position1)}{Table.LetterAtRightNeighbor(position2)}";
+                    return $"{Table.LetterAtRightNeighbor(position1)}{Table.LetterAtRightNeighbor(position2)}";
 
                 // Different row, different column
-                return $"{Table.Table[position1.Y][position2.X]}{Table.Table[position2.Y][position1.X]}";
+                return $"{Table.Value[position1.Y][position2.X]}{Table.Value[position2.Y][position1.X]}";
             }));
         
         private static bool IsSameRow(Position position1, Position position2) => position1.Y == position2.Y;
         private static bool IsSameColumn(Position position1, Position position2) => position1.X == position2.X;
         
         
-        public string Decrypt(string message)
-        {
+        public string Decrypt(PlayfairMessage message) =>
             throw new System.NotImplementedException();
-        }
 
     }
 }

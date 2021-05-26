@@ -7,10 +7,11 @@ namespace PlayfairCipher
 {
     public record KeyTable
     {
-        public List<List<char>> Table { get; }
+        public List<List<char>> Value { get; }
+        
         private const int TableSize = 5;
 
-        private KeyTable(List<List<char>> table) => Table = table;
+        private KeyTable(List<List<char>> value) => Value = value;
 
         public static KeyTable Empty = new(SplitList.Split(Enumerable.Range('A', 26).Select(x => (char) x).Where(c => c != 'J').ToList()).ToList());
         
@@ -38,10 +39,10 @@ namespace PlayfairCipher
 
         public Position GetPositionOfCharacter(char c)
         {
-            for (var y = 0; y < Table.Count; y++)
-                for (var x = 0; x < Table[y].Count; x++)
+            for (var y = 0; y < Value.Count; y++)
+                for (var x = 0; x < Value[y].Count; x++)
                 {
-                    if (Table[y][x] == c)
+                    if (Value[y][x] == c)
                         return new Position
                         {
                             X = x,
@@ -54,12 +55,12 @@ namespace PlayfairCipher
         
         public char LetterBelow(Position position)
         {
-            return Table[(position.Y + 1) % TableSize][position.X];
+            return Value[(position.Y + 1) % TableSize][position.X];
         }
 
         public char LetterAtRightNeighbor(Position position)
         {
-            return Table[position.Y][(position.X + 1) % TableSize];
+            return Value[position.Y][(position.X + 1) % TableSize];
         }
     }
     
