@@ -11,7 +11,10 @@ namespace PlayfairCipher
         
         private const int TableSize = 5;
 
-        private KeyTable(List<List<char>> value) => Value = value;
+        private KeyTable(List<List<char>> value)
+        {
+            Value = value;
+        }
 
         public static KeyTable Empty = new(SplitList.Split(Enumerable.Range('A', 26).Select(x => (char) x).Where(c => c != 'J').ToList()).ToList());
         
@@ -49,7 +52,6 @@ namespace PlayfairCipher
                             Y = y
                         };
                 }
-
             throw new Exception("Char not found in key table");
         }
         
