@@ -13,7 +13,7 @@ namespace PlayfairCipher
     }
     public class PlayfairCipher: IPlayfairCipher
     {
-        private KeyTable Table { get; set; }= KeyTable.Empty;
+        private KeyTable Table { get; set; } = KeyTable.Empty;
         
         public void SetKeyTable(KeyTable keyTable)
         {
