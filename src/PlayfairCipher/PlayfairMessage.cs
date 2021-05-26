@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using PlayfairCipher.Extensions;
 
 namespace PlayfairCipher
 {
@@ -24,6 +26,18 @@ namespace PlayfairCipher
                     result = result.Insert(i + 1, "X");
             }
             return result;
+        }
+        
+        public IEnumerable<string> BreakMessageIntoDigraphs()
+        {
+            var digraphs = SplitList.Split(Value.ToList(), 2);
+            return digraphs.Select(digraph =>
+            {
+                if (digraph.Count == 1)
+                    return $"{digraph[0]}X";
+
+                return string.Concat(digraph);
+            });
         }
         
     }

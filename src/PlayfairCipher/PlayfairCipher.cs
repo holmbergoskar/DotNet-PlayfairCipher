@@ -20,26 +20,7 @@ namespace PlayfairCipher
             Table = keyTable;
         }
 
-        public string Encrypt(PlayfairMessage message)
-        {
-            var digraphs = BreakMessageIntoDigraphs(message);
-            return CipherDigraphsOnKeyTable(digraphs);
-        }
-        
-        private static IEnumerable<string> BreakMessageIntoDigraphs(PlayfairMessage message)
-        {
-            var digraphs = SplitList.Split(message.Value.ToList(), 2);
-            return digraphs.Select(digraph =>
-            {
-                if (digraph.Count == 1)
-                    return $"{digraph[0]}X";
-
-                if (digraph[0] == digraph[1])
-                    return $"{digraph[0]}X";
-
-                return string.Concat(digraph);
-            });
-        }
+        public string Encrypt(PlayfairMessage message) => CipherDigraphsOnKeyTable(message.BreakMessageIntoDigraphs()); 
         
         private string CipherDigraphsOnKeyTable(IEnumerable<string> digraphs) =>
             string.Concat(digraphs.Select(digraph =>
@@ -62,7 +43,6 @@ namespace PlayfairCipher
         
         private static bool IsSameRow(Position position1, Position position2) => position1.Y == position2.Y;
         private static bool IsSameColumn(Position position1, Position position2) => position1.X == position2.X;
-        
         
         public string Decrypt(PlayfairMessage message) =>
             throw new System.NotImplementedException();
